@@ -38,8 +38,8 @@ async function run() {
             res.json(result);
         });
 
-         // post reviews to the database
-         app.post('/reviews', async (req, res) => {
+        // post reviews to the database
+        app.post('/reviews', async (req, res) => {
             const review = req.body;
             console.log(review)
             const result = await reviewCollection.insertOne(review)
@@ -63,6 +63,26 @@ async function run() {
             const product = await cursor.toArray();
             res.send(product);
         });
+        // get all orders by matching email
+        app.get('/orders', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+            const cursor = orderCollection.find(query);
+            const order = await cursor.toArray();
+            res.send(order);
+        });
+        // get all orders
+        app.get('/orders/admin', async (req, res) => {
+            const cursor = orderCollection.find({});
+            const order = await cursor.toArray();
+            res.send(order);
+        });
+        // get all reviews
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewCollection.find({});
+            const review = await cursor.toArray();
+            res.send(review);
+        });
 
         // get a single product frpm product collection
         app.get('/products/:id', async (req, res) => {
@@ -78,6 +98,92 @@ async function run() {
             const result = await orderCollection.insertOne(order);
             res.json(result)
         });
+
+
+        // add admin
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        })
+
+        // Check admin
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
+
+
+
+        // delete a data from order collection
+
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
+            res.json(result);
+        })
+
+        // delete a data from products collection
+
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productCollection.deleteOne(query);
+            res.json(result);
+        })
+
+
+
+
+        // update data into orders collection
+        // app.put('/orders/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     console.log('updating', id)
+        //     const updatedStatus = req.body;
+        //     const filter = { _id: ObjectId(id) };
+        //     const options = { upsert: true };
+        //     const updateDoc = { $set: { status: updatedStatus.status, } };
+        //     const result = await orderCollection.updateOne(filter, updateDoc, options)
+        //     res.json(result)
+
+
+        // });
+  // update data into dinner collection
+    app.put('/products/:id', async (req, res) => {
+    const id = req.params.id;
+    console.log('updating', id)
+    const updatedProduct = req.body;
+    const filter = { _id: ObjectId(id) };
+    const options = { upsert: true };
+    const updateDoc = {
+        $set: {
+            name: updatedProduct.name,
+            price: updatedProduct.price,
+            img: updatedProduct.img,
+            description:updatedProduct.description
+
+
+        },
+    };
+    const result = await productCollection.updateOne(filter, updateDoc, options)
+    console.log('updating', id)
+    res.json(result)
+
+
+});
+
+
+
+
 
     }
     finally {
