@@ -145,41 +145,42 @@ async function run() {
 
 
         // update data into orders collection
-        // app.put('/orders/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     console.log('updating', id)
-        //     const updatedStatus = req.body;
-        //     const filter = { _id: ObjectId(id) };
-        //     const options = { upsert: true };
-        //     const updateDoc = { $set: { status: updatedStatus.status, } };
-        //     const result = await orderCollection.updateOne(filter, updateDoc, options)
-        //     res.json(result)
+        app.put('/orders/admin/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log('updating', id)
+            const updatedStatus = req.body;
+            console.log(updatedStatus)
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = { $set: { status: updatedStatus.status } };
+            const result = await orderCollection.updateOne(filter, updateDoc, options)
+            res.json(result)
 
 
-        // });
-  // update data into dinner collection
-    app.put('/products/:id', async (req, res) => {
-    const id = req.params.id;
-    console.log('updating', id)
-    const updatedProduct = req.body;
-    const filter = { _id: ObjectId(id) };
-    const options = { upsert: true };
-    const updateDoc = {
-        $set: {
-            name: updatedProduct.name,
-            price: updatedProduct.price,
-            img: updatedProduct.img,
-            description:updatedProduct.description
+        });
+        // update data into products collection
+        app.put('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log('updating', id)
+            const updatedProduct = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    name: updatedProduct.name,
+                    price: updatedProduct.price,
+                    img: updatedProduct.img,
+                    description: updatedProduct.description
 
 
-        },
-    };
-    const result = await productCollection.updateOne(filter, updateDoc, options)
-    console.log('updating', id)
-    res.json(result)
+                },
+            };
+            const result = await productCollection.updateOne(filter, updateDoc, options)
+            console.log('updating', id)
+            res.json(result)
 
 
-});
+        });
 
 
 
