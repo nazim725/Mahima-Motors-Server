@@ -144,7 +144,7 @@ async function run() {
 
 
 
-        // update data into orders collection
+        // update status into orders collection
         app.put('/orders/admin/:id', async (req, res) => {
             const id = req.params.id;
             console.log('updating', id)
