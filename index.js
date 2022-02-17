@@ -67,7 +67,7 @@ async function run() {
     // get all orders by matching email
     app.get("/orders", async (req, res) => {
       const email = req.query.email;
-      const query = { cus_email: email };
+      const query = { email: email };
       const cursor = orderCollection.find(query);
       const order = await cursor.toArray();
       res.send(order);
