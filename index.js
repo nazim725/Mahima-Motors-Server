@@ -18,7 +18,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+     client.connect();
     const database = client.db("Mahima-Motors");
     const userCollection = database.collection("users");
     const productCollection = database.collection("products");
